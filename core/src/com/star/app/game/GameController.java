@@ -9,8 +9,11 @@ public class GameController {
     private BulletController bulletController;
     private AsteroidController asteroidController;
     private ParticleController particleController;
+    private BonusController bonusController;
     private Hero hero;
     private Vector2 tempVec;
+
+    public BonusController getBonusController() { return bonusController; }
 
     public ParticleController getParticleController() {
         return particleController;
@@ -36,6 +39,7 @@ public class GameController {
         this.background = new Background(this);
         this.bulletController = new BulletController(this);
         this.asteroidController = new AsteroidController(this);
+        this.bonusController = new BonusController(this);
         this.particleController = new ParticleController();
         this.hero = new Hero(this);
         this.tempVec = new Vector2();
@@ -52,6 +56,7 @@ public class GameController {
         bulletController.update(dt);
         asteroidController.update(dt);
         particleController.update(dt);
+        bonusController.update(dt);
         hero.update(dt);
         checkCollisions();
     }
@@ -76,6 +81,15 @@ public class GameController {
                     hero.addScore(a.getHpMax() * 50);
                 }
                 hero.takeDamage(2);
+            }
+        }
+
+        //столкновения героя и бонусов
+        for (int i = 0; i < bonusController.getActiveList().size(); i++) {
+            Bonus bonus = bonusController.getActiveList().get(i);
+            if (hero.getHitArea().contains(bonus.getPosition())) {
+                hero.setBonus(bonus.getBt(),bonus.getBonusAmount());
+                bonus.deactivate();
             }
         }
 
