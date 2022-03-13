@@ -25,6 +25,7 @@ public class Hero {
     private int scoreView;
     private int hp;
     private int hpMax;
+    private int gold;
     private StringBuilder sb;
     private Circle hitArea;
     private Weapon currentWeapon;
@@ -58,6 +59,7 @@ public class Hero {
         this.enginePower = 700.0f;
         this.hpMax = 100;
         this.hp = hpMax;
+        this.gold = 0;
         this.sb = new StringBuilder();
         this.hitArea = new Circle(position, 28);
 
@@ -80,6 +82,7 @@ public class Hero {
     public void renderGUI(SpriteBatch batch, BitmapFont font) {
         sb.setLength(0);
         sb.append("SCORE: ").append(scoreView).append("\n");
+        sb.append("GOLD: ").append(gold).append("\n");
         sb.append("HP: ").append(hp).append("/").append(hpMax).append("\n");
         sb.append("BULLETS: ").append(currentWeapon.getCurBullets()).append("/").append(currentWeapon.getMaxBullets()).append("\n");
         font.draw(batch, sb, 20, 700);
@@ -192,6 +195,20 @@ public class Hero {
         if (position.y > ScreenManager.SCREEN_HEIGHT - 32) {
             position.y = ScreenManager.SCREEN_HEIGHT - 32f;
             velocity.y *= -0.5f;
+        }
+    }
+
+    public void setBonus(BonusController.BonusType bt, int amount) {
+        switch (bt) {
+            case GOLD:
+                gold += amount;
+                break;
+            case HP:
+                hp += amount;
+                break;
+            case AMMO:
+                currentWeapon.setCurBullets(amount);
+                break;
         }
     }
 }
